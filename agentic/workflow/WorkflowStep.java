@@ -1,9 +1,10 @@
 package agentic.workflow;
-
+import agentic.workflow.llm.*;
 public class WorkflowStep {
     private String name;
     private String prompt;
     private String systemPrompt;
+    private StructuredOutput structuredOutput;
 
     public String getName() {return name;}
     public void setName(String name) {
@@ -27,6 +28,33 @@ public class WorkflowStep {
             throw new IllegalArgumentException("Nem lehet ures promtot megadni!");
         }
         this.systemPrompt=systemPrompt;
+
+    }
+
+    public StructuredOutput getStructuredOutput() {return structuredOutput;}
+
+    public void setStructuredOutput(StructuredOutput structuredOutput){
+        if(structuredOutput == null){
+            throw new IllegalArgumentException("Nem lehet structuredOutput null!");
+        }
+        this.structuredOutput=structuredOutput;
+    }
+
+    public WorkflowStep(String name,String prompt,String systemPrompt,StructuredOutput structuredOutput){
+        if(name.isEmpty() || prompt.isEmpty() || systemPrompt.isEmpty() || structuredOutput == null){
+            throw new IllegalArgumentException("Hibas ures adat a constructorbam!");
+        }
+        this.name=name;
+        this.prompt=prompt;
+        this.systemPrompt=systemPrompt;
+        this.structuredOutput=structuredOutput;
+    }
+
+    public boolean expectsStructuredOutput(){
+        return structuredOutput != null;
+    }
+
+    public String methodSimulateResponse(){
 
     }
 }

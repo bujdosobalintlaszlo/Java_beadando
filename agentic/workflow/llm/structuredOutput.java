@@ -1,5 +1,7 @@
 package agentic.workflow.llm;
 
-public class structuredOutput {
-    
+import java.util.ArrayList;
+
+public class StructuredOutput {
+    ArrayList<SchemaTypes>schemaTypes;
 }
