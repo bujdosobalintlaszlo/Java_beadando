@@ -55,7 +55,25 @@ public class WorkflowStep {
     }
 
     public String methodSimulateResponse(){
-        SchemaType s = structuredOutput.getSchemaTypes().getFirst();
-        
+        if (!structuredOutput.getSchemaTypes().isEmpty()) {
+            SchemaType s = structuredOutput.getSchemaTypes().get(0);
+            switch(s){
+                case INT:
+                    return "0";
+                case STRING:
+                    return "sample";
+                case BOOLEAN:
+                    return "true";
+                case LIST_INT:
+                    return "[1,2,3]";
+                case LIST_STRING:
+                    return "[\"a\",\"b\"]";
+                case MAP_STRING_STRING:
+                    return "{\"kulcs\":\"érték\"}";
+                default: 
+                    return "";
+            }
+        }
+        return "";
     }
 }
