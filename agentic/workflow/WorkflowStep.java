@@ -55,6 +55,7 @@ public class WorkflowStep {
     }
 
     public String methodSimulateResponse(){
-
+        SchemaType s = structuredOutput.getSchemaTypes().getFirst();
+        
     }
 }
