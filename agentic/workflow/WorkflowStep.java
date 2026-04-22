@@ -54,7 +54,7 @@ public class WorkflowStep {
         return structuredOutput != null;
     }
 
-    public String methodSimulateResponse(){
+    public String simulateResponse(){
         if (!structuredOutput.getSchemaTypes().isEmpty()) {
             SchemaType s = structuredOutput.getSchemaTypes().get(0);
             switch(s){
