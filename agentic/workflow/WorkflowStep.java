@@ -51,7 +51,7 @@ public class WorkflowStep {
     }
 
     public boolean expectsStructuredOutput() {
-        return structuredOutput.getSchemaTypes().length>0;
+        return structuredOutput.size() > 0;
     }
 
     public String simulateResponse(){

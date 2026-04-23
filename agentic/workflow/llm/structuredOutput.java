@@ -16,7 +16,7 @@ public class StructuredOutput {
 
     public boolean contains(SchemaType schemaType) {
         if (schemaType == null) return false;
-        
+
         for (SchemaType s : schemaTypes) {
             if (s == schemaType) {
                 return true;
