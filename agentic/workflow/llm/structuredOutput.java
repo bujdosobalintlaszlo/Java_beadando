@@ -1,28 +1,31 @@
 package agentic.workflow.llm;
 
-import java.util.Collections;
-import java.util.List;
 public class StructuredOutput {
-    List<SchemaType>schemaTypes;
+    private final SchemaType[] schemaTypes;
 
-    public List<SchemaType> getSchemaTypes(){return Collections.unmodifiableList(schemaTypes);}
-    public void setSchemaTypes(List<SchemaType> schemaTypes){
-        if(schemaTypes.isEmpty()){
-            throw new IllegalArgumentException("Ures schemaType jott paramterben!");
+    public StructuredOutput(SchemaType[] schemaTypes) {
+        if (schemaTypes == null || schemaTypes.length <= 0) {
+            throw new IllegalArgumentException("Ures schemaType jott parameterben!");
         }
-        this.schemaTypes = schemaTypes;
+        this.schemaTypes = schemaTypes.clone();
     }
 
-    public StructuredOutput(List<SchemaType> schemaTypes){
-        if(schemaTypes.isEmpty()){
-            throw new IllegalArgumentException("Ures schemaType jott paramterben!");
+    public SchemaType[] getSchemaTypes() {
+        return schemaTypes.clone();
+    }
+
+    public boolean contains(SchemaType schemaType) {
+        if (schemaType == null) return false;
+        
+        for (SchemaType s : schemaTypes) {
+            if (s == schemaType) {
+                return true;
+            }
         }
-        this.schemaTypes=schemaTypes;
+        return false;
     }
 
-    public boolean contains(SchemaType schemaType){
-        return schemaTypes.contains(schemaType);
+    public int size() {
+        return schemaTypes.length;
     }
-
-    public int methodSize(){return schemaTypes.size();}
 }
