@@ -50,7 +50,7 @@ public class WorkflowStep {
         this.structuredOutput=structuredOutput;
     }
 
-    public boolean expectsStructuredOutput() {
+    private boolean expectsStructuredOutput() {
         return structuredOutput != null && !structuredOutput.getSchemaTypes().isEmpty();
     }
 
