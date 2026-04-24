@@ -50,13 +50,18 @@ public class WorkflowStep {
         this.structuredOutput=structuredOutput;
     }
 
+<<<<<<< HEAD
     private boolean expectsStructuredOutput() {
         return structuredOutput != null && !structuredOutput.getSchemaTypes().isEmpty();
+=======
+    public boolean expectsStructuredOutput() {
+        return structuredOutput.size() > 0;
+>>>>>>> 5543636c3b4cf38a07a628f3ef3f85bc7c40d6fb
     }
 
     public String simulateResponse(){
-        if (!structuredOutput.getSchemaTypes().isEmpty()) {
-            SchemaType s = structuredOutput.getSchemaTypes().get(0);
+        if (structuredOutput.getSchemaTypes().length > 0) {
+            SchemaType s = structuredOutput.getSchemaTypes()[0];
             switch(s){
                 case INT:
                     return "0";
