@@ -1,4 +1,8 @@
 package agentic.workflow;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 public class Agent {
@@ -38,8 +42,22 @@ public class Agent {
         }
     }
 
-    public Agent loadAgent(STring filename){
+    public Agent loadAgent(String filename){
+        Agent a;
+        try (
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+        ) {
+            //nev kiszedese, agent peldanyositasa
+            String name = br.readLine();
+            if(name == null) return null;
+            String[] splitName = name.strip().split(":");
+            a = new Agent(splitName[1]);
+            
+        } catch (IOException e) {
+            return null;
+        }
 
+        return a;
     }
 
 }
