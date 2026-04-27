@@ -1,15 +1,23 @@
 package agentic.workflow;
+import agentic.workflow.llm.SchemaType;
+import agentic.workflow.llm.StructuredOutput;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 public class Agent {
     private String name;
-    private List<WorkflowStep> steps;
+    private final ArrayList<WorkflowStep> steps= new ArrayList<>();
     
     public String getName() {return name;}
     public void setName(String name) {this.name=name;}
 
-    public List<WorkflowStep> getSteps() {return Collections.unmodifiableList(steps);}
-    public void setName(List<WorkflowStep> steps) {this.steps=steps;}
+    
+    public List<WorkflowStep> getSteps() {
+        return Collections.unmodifiableList(steps);
+    }
 
     public Agent(String name){
         if(name == null){
@@ -38,8 +46,60 @@ public class Agent {
         }
     }
 
-    public Agent loadAgent(STring filename){
+    public Agent loadAgent(String filename){
+        Agent a;
+        try (
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+        ) {
 
+            String name = br.readLine();
+            if(name == null) return null;
+            String[] splitName = name.strip().split(":");
+            a = new Agent(splitName[1]);
+            
+        } catch (IOException e) {
+            return null;
+        }
+
+        return a;
     }
 
+    public WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
+        if(reader.readLine().equals("STEP")){
+            
+            //name
+            String[] name = reader.readLine().strip().split("=");
+            if(!name[0].equals("name")){
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
+            
+            //prompt
+            String[] prompt = reader.readLine().strip().split("=");
+            if(!prompt[0].equals("prompt")){
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
+
+            //systemPrompt
+            String[] systemPrompt = reader.readLine().strip().split("=");
+            if(!systemPrompt[0].equals("systemPrompt")){
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
+
+            //output
+            String[] output = reader.readLine().strip().split("=");
+            if(!output[0].equals("output")){
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
+            String[] stout = output[1].split(" ");
+            SchemaType[] s = {};
+            for(String a : stout){
+                switch
+            } 
+            WorkflowStep w = new WorkflowStep(name[1], prompt[1], systemPrompt[1],new StructuredOutput(stout));
+    
+            return w;
+        }
+
+        throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+    }
 }
