@@ -46,7 +46,7 @@ public class Agent {
         }
     }
 
-    public Agent loadAgent(String filename){
+    public static Agent loadAgent(String filename){
         Agent a;
         try (
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -64,7 +64,7 @@ public class Agent {
         return a;
     }
 
-    public WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
+    private static WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
         if(reader.readLine().equals("STEP")){
             
             //name
@@ -90,13 +90,18 @@ public class Agent {
             if(!output[0].equals("output")){
                 throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
             }
+
             String[] stout = output[1].split(" ");
-            SchemaType[] s = {};
-            for(String a : stout){
-                switch
-            } 
-            WorkflowStep w = new WorkflowStep(name[1], prompt[1], systemPrompt[1],new StructuredOutput(stout));
-    
+            SchemaType[] s = new SchemaType[stout.length];
+
+            for (int i = 0; i < stout.length; i++) {
+                try {
+                    s[i] = SchemaType.valueOf(stout[i]);
+                } catch (IllegalArgumentException e) {
+                    throw new WorkflowFormatException("Nem létező típus: " + stout[i]);
+                }
+            }
+            WorkflowStep w = new WorkflowStep(name[1], prompt[1], systemPrompt[1], new StructuredOutput(s));
             return w;
         }
 
