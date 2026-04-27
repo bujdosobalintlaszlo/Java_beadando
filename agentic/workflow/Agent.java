@@ -1,4 +1,6 @@
 package agentic.workflow;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Collections;
 import java.util.List;
 public class Agent {
@@ -38,8 +40,14 @@ public class Agent {
         }
     }
 
-    public Agent loadAgent(STring filename){
+    public Agent loadAgent(String filename){
+        try(
+            BufferedReader r = new BufferedReader(new FileReader(filename));
+        ){
+            Agent a;
 
+        }
+        return a;
     }
 
 }
