@@ -104,12 +104,13 @@ public void methodLoadAgent() {
       .testWith(testCase("testLoadAgentRejectsDuplicateStepNames"), "Ellenőrzi, hogy a fájlban lévő azonos lépésnevek nem elfogadhatók.");
 }
 
+//HIBAS ALAPBOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 @Test
 public void methodParseStep() {
-    it.hasMethod("parseStep", withParams("reader: BufferedReader"))
+    it.hasMethod("parseStep", withParams("reader: java.io.BufferedReader"))
       .thatIs(USABLE_WITHOUT_INSTANCE, FULLY_IMPLEMENTED, MODIFIABLE, VISIBLE_TO_NONE)
       .thatReturns("WorkflowStep", "A feldolgozott workflow lépés.")
-      .thatThrows("IOException", "ha a fájl olvasása meghiúsul.")
+      .thatThrows("java.io.IOException", "ha a fájl olvasása meghiúsul.")
       .thatThrows("WorkflowFormatException", "ha a lépés tartalma hibás vagy hiányos.")
       .info("""
           Egyetlen lépést olvas a readerből, egészen az `ENDSTEP` sorig.
