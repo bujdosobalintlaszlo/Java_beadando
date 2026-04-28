@@ -9,22 +9,24 @@ import java.util.Collections;
 import java.util.List;
 public class Agent {
     private String name;
-    private List<WorkflowStep> steps;
+    private final List<WorkflowStep> steps;
     
     public String getName() {return name;}
     public void setName(String name) {this.name=name;}
 
     public List<WorkflowStep> getSteps() {return Collections.unmodifiableList(steps);}
-    public void setName(List<WorkflowStep> steps) {this.steps=steps;}
 
-    public Agent(String name){
-        if(name == null){
-            throw new IllegalArgumentException("a név nem lehet `null`, üres vagy csak szóközökből álló.");
+    public Agent(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("A név nem lehet null, üres vagy csak szóközökből álló.");
         }
-        this.name=name;
-
+        this.name = name;
+        this.steps = new ArrayList<>();
     }
-
+    public void addStep(WorkflowStep s) throws IllegalArgumentException{
+        if(s == null) throw new IllegalArgumentException();
+        this.steps.add(s);
+    }
     public int getStepCount() {return steps.size();}
 
     public WorkflowStep findStepByName(String stepName){
@@ -39,13 +41,17 @@ public class Agent {
         return null;
     }
 
+    private static boolean checkName(String name) {
+        return !(name.trim().isEmpty());
+    }
+
     public void run(){
         for(WorkflowStep step : steps){
             System.out.println(step.getName() + " " + step.getStructuredOutput());
         }
     }
 
-    public static Agent loadAgent(String filename){
+    public static Agent loadAgent(String filename) throws IOException,WorkflowFormatException{
         Agent a;
         try (
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -54,8 +60,14 @@ public class Agent {
             String name = br.readLine();
             if(name == null) return null;
             String[] splitName = name.strip().split(":");
+            if(!checkName(splitName[1])) {
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
             a = new Agent(splitName[1]);
-            
+            while(br.readLine().equals("STEP")){
+                WorkflowStep wstp = parseStep(br);
+                a.addStep(wstp);
+            }
             
         } catch (IOException e) {
             return null;
@@ -94,6 +106,9 @@ public class Agent {
             String[] stout = output[1].split(" ");
             SchemaType[] s = new SchemaType[stout.length];
 
+            if(!reader.readLine().equals("ENDSTEP")){
+                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            }
             for (int i = 0; i < stout.length; i++) {
                 try {
                     s[i] = SchemaType.valueOf(stout[i]);
@@ -107,4 +122,6 @@ public class Agent {
 
         throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
     }
+
+
 }

@@ -92,7 +92,7 @@ public void methodLoadAgent() {
       .thatReturns("Agent", "A betöltött ágens.")
       .thatThrows("IllegalArgumentException", "a fájlnév nem lehet `null`, üres vagy csak szóközökből álló.")
       .thatThrows("WorkflowFormatException", "ha a fájl tartalma hibás formátumú.")
-      .thatThrows("IOException", "ha a fájl nem olvasható.")
+      .thatThrows("java.io.IOException", "ha a fájl nem olvasható.")
       .info("""
           Betölt egy ágenst egy workflow leíró szövegfájlból.
           Az első nem üres sornak `AGENT: ...` formájúnak kell lennie.
