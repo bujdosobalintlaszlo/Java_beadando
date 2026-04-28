@@ -7,19 +7,20 @@ import java.util.Collections;
 import java.util.List;
 public class Agent {
     private String name;
-    private List<WorkflowStep> steps;
+    private final List<WorkflowStep> steps = new List<WorkflowStep>();
     
     public String getName() {return name;}
     public void setName(String name) {this.name=name;}
 
     public List<WorkflowStep> getSteps() {return Collections.unmodifiableList(steps);}
-    public void setName(List<WorkflowStep> steps) {this.steps=steps;}
+    //public void setName(List<WorkflowStep> steps) {this.steps=steps;}
 
     public Agent(String name){
         if(name == null){
             throw new IllegalArgumentException("a név nem lehet `null`, üres vagy csak szóközökből álló.");
         }
         this.name=name;
+
     }
 
     public int getStepCount() {return steps.size();}
@@ -52,6 +53,7 @@ public class Agent {
             if(name == null) return null;
             String[] splitName = name.strip().split(":");
             a = new Agent(splitName[1]);
+            
             
         } catch (IOException e) {
             return null;
