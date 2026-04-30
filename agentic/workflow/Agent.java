@@ -66,33 +66,16 @@ public class Agent {
 
     private static WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
         if(reader.readLine().equals("STEP")){
-            
-            //name
-            String[] name = reader.readLine().strip().split("=");
-            if(!name[0].equals("name")){
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+            String[] data = {};
+            String temp=reader.readLine();
+            int i =0;
+            while(!temp.equals("ENDSTEP") && i<4){
+                    data.add(reader.readLine());
             }
-            
-            //prompt
-            String[] prompt = reader.readLine().strip().split("=");
-            if(!prompt[0].equals("prompt")){
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+           
+            if(i >=4 || i < 3){
+                throw new WorkflowFormatException("a lépés tartalma hibás vagy hiányos.");
             }
-
-            //systemPrompt
-            String[] systemPrompt = reader.readLine().strip().split("=");
-            if(!systemPrompt[0].equals("systemPrompt")){
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
-            }
-
-            //output
-            String[] output = reader.readLine().strip().split("=");
-            if(!output[0].equals("output")){
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
-            }
-
-            String[] stout = output[1].split(" ");
-            SchemaType[] s = new SchemaType[stout.length];
 
             for (int i = 0; i < stout.length; i++) {
                 try {
