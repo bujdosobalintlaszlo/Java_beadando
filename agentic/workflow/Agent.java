@@ -1,9 +1,4 @@
 package agentic.workflow;
-import agentic.workflow.llm.SchemaType;
-import agentic.workflow.llm.StructuredOutput;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +19,7 @@ public class Agent {
         this.steps = new ArrayList<>();
     }
     public void addStep(WorkflowStep s) throws IllegalArgumentException{
-        if(s == null) throw new IllegalArgumentException();
+        if(s == null || steps.contains(s)) throw new IllegalArgumentException("a lépés nem lehet `null`, és nem létezhet már másik lépés ugyanazzal a névvel.");
         this.steps.add(s);
     }
     public int getStepCount() {return steps.size();}
@@ -50,7 +45,7 @@ public class Agent {
             System.out.println(step.getName() + " " + step.getStructuredOutput());
         }
     }
-
+    /* 
     public static Agent loadAgent(String filename) throws IOException,WorkflowFormatException{
         Agent a;
         try (
@@ -105,6 +100,6 @@ public class Agent {
 
         throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
     }
-
+    */
 
 }

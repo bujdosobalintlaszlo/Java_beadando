@@ -1,8 +1,6 @@
 package agentic.workflow.llm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.beans.Transient;
-
 import org.junit.jupiter.api.Test;
 public class StructuredOutputTest {
 
