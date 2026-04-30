@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class AgentTest {
     //sima hozzaadas tesztje
     @Test 
-    public void addStepTest1(){
+    public void testStepCount(){
         Agent testAgent = new Agent("testAgent");
         int stepsBefore=testAgent.getStepCount();
         testAgent.addStep(new WorkflowStep("testStepName1", "testPrompt1", "testSystemPrompt1", new StructuredOutput(new SchemaType[]{SchemaType.BOOLEAN})));
@@ -21,7 +21,7 @@ public class AgentTest {
 
     //duplikalt elem hozzaadasa
     @Test 
-    public void addStepTest2(){
+    public void testAddDuplicateStepRejected(){
         Agent testAgent = new Agent("testAgent");
         int stepsBefore=testAgent.getStepCount();
         WorkflowStep step = new WorkflowStep("testStepName1", "testPrompt1", "testSystemPrompt1", new StructuredOutput(new SchemaType[]{SchemaType.BOOLEAN}));
