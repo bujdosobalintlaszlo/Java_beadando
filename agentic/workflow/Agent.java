@@ -87,8 +87,8 @@ public class Agent {
     }
     private static WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
         String tempLine = reader.readLine();
-        if(!tempLine.equals("STEP")){
-            return null;
+        if (tempLine == null || !tempLine.equals("STEP")) {
+            return null; 
         }
         HashMap<String,String> a = new HashMap<>();
         tempLine = reader.readLine();
