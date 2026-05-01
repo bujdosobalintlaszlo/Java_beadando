@@ -104,7 +104,7 @@ public void methodLoadAgent() {
       .testWith(testCase("testLoadAgentRejectsDuplicateStepNames"), "Ellenőrzi, hogy a fájlban lévő azonos lépésnevek nem elfogadhatók.");
 }
 
-//HIBAS ALAPBOL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//HIBAS teszteset, java.io. kiegeszitesek
 @Test
 public void methodParseStep() {
     it.hasMethod("parseStep", withParams("reader: java.io.BufferedReader"))

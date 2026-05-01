@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.beans.Transient;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test; 
 
@@ -51,5 +52,31 @@ public class AgentTest {
         WorkflowStep step = new WorkflowStep("testStepName1", "testPrompt1", "testSystemPrompt1", new StructuredOutput(new SchemaType[]{SchemaType.BOOLEAN}));
         testAgent.addStep(step);
         assertEquals(null,testAgent.findStepByName("ezbiztosanhianyzik"));
+    }
+
+    @Test 
+    public void testLoadAgentSuccess() throws IOException, WorkflowFormatException{
+        Agent a = Agent.loadAgent("calculator.agent");
+        assertEquals("Calculator Helper",a.getName());
+    }
+
+    @Test 
+    public void testLoadAgentRejectsMissingHeader()throws IOException, WorkflowFormatException{
+        try {
+            Agent a = Agent.loadAgent("noname.agent");
+            fail("HIBA agent nevkezelesben!");
+        } catch (WorkflowFormatException e) {
+            assertEquals("Fájl tartalma hibás formátumú: hiányzó AGENT fejléc.",e.getMessage());
+        }
+    }
+
+    @Test 
+    public void testLoadAgentRejectsDuplicateStepNames()throws IOException, WorkflowFormatException{
+        try {
+            Agent a = Agent.loadAgent("doublestepname.agent");
+            fail("HIBA duplalepes kezeleseben!");
+        } catch (WorkflowFormatException e) {
+            assertEquals("Létezik már ilyen nevű lépés!",e.getMessage());
+        }
     }
 }

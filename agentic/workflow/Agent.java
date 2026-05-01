@@ -68,7 +68,7 @@ public class Agent {
 
             String agentName = splitTempLine[1].trim();
             if(agentName.isEmpty()){
-                throw new WorkflowFormatException("UresNev");
+                throw new WorkflowFormatException("Agent neve üres volt!");
             }
             Agent a = new Agent(agentName);
     
@@ -76,6 +76,9 @@ public class Agent {
             while (true) {
                 step = parseStep(br);
                 if(step == null) break;
+                if(a.findStepByName(step.getName()) != null){
+                    throw new WorkflowFormatException("Létezik már ilyen nevű lépés!");
+                }
                 a.addStep(step);
             }
             
@@ -145,5 +148,4 @@ public class Agent {
             return null;
         }
     }
-    
 }
