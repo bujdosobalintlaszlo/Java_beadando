@@ -1,7 +1,14 @@
 package agentic.workflow;
+import agentic.workflow.llm.SchemaType;
+import agentic.workflow.llm.StructuredOutput;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 public class Agent {
     private String name;
     private final List<WorkflowStep> steps;
@@ -45,61 +52,98 @@ public class Agent {
             System.out.println(step.getName() + " " + step.getStructuredOutput());
         }
     }
-    /* 
-    public static Agent loadAgent(String filename) throws IOException,WorkflowFormatException{
-        Agent a;
-        try (
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-        ) {
-
-            String name = br.readLine();
-            if(name == null) return null;
-            String[] splitName = name.strip().split(":");
-            if(!checkName(splitName[1])) {
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+    public static Agent loadAgent(String filename) throws IOException, WorkflowFormatException {
+        if (filename == null || filename.isBlank()) {
+            throw new IllegalArgumentException("A fájlnév nem lehet null vagy üres.");
+        }
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String tempLine = br.readLine();
+            if (tempLine == null) throw new WorkflowFormatException("A fájl üres.");
+    
+            String[] splitTempLine = tempLine.split(":");
+            if (!splitTempLine[0].equals("AGENT")) {
+                throw new WorkflowFormatException("Fájl tartalma hibás formátumú: hiányzó AGENT fejléc.");
             }
-            a = new Agent(splitName[1]);
-            while(br.readLine().equals("STEP")){
-                WorkflowStep wstp = parseStep(br);
-                a.addStep(wstp);
+
+            String agentName = splitTempLine[1].trim();
+            if(agentName.isEmpty()){
+                throw new WorkflowFormatException("UresNev");
+            }
+            Agent a = new Agent(agentName);
+    
+            WorkflowStep step = null;
+            while (true) {
+                step = parseStep(br);
+                if(step == null) break;
+                a.addStep(step);
             }
             
+            return a;
+            
         } catch (IOException e) {
+            throw e;
+        }
+    }
+    private static WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
+        String tempLine = reader.readLine();
+        if(!tempLine.equals("STEP")){
             return null;
         }
-
-        return a;
-    }
-
-    private static WorkflowStep parseStep(BufferedReader reader) throws IOException,WorkflowFormatException{
-        if(reader.readLine().equals("STEP")){
-            String[] data = {};
-            String temp=reader.readLine();
-            int i =0;
-            while(!temp.equals("ENDSTEP") && i<4){
-                    data.add(reader.readLine());
-            }
-           
-            if(i >=4 || i < 3){
-                throw new WorkflowFormatException("a lépés tartalma hibás vagy hiányos.");
-            }
-
-            if(!reader.readLine().equals("ENDSTEP")){
-                throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
-            }
-            for (int i = 0; i < stout.length; i++) {
-                try {
-                    s[i] = SchemaType.valueOf(stout[i]);
-                } catch (IllegalArgumentException e) {
-                    throw new WorkflowFormatException("Nem létező típus: " + stout[i]);
-                }
-            }
-            WorkflowStep w = new WorkflowStep(name[1], prompt[1], systemPrompt[1], new StructuredOutput(s));
-            return w;
+        HashMap<String,String> a = new HashMap<>();
+        tempLine = reader.readLine();
+        while(!tempLine.equals("ENDSTEP")){
+            String[] splitTemp = tempLine.split("=");
+            a.put(splitTemp[0], splitTemp[1]);
+            tempLine = reader.readLine();
         }
+        String name = null;
+        String prompt = null;
+        String systemPrompt = null;
+        SchemaType output = null;
 
-        throw new WorkflowFormatException("ha a lépés tartalma hibás vagy hiányos.");
+        for(Map.Entry<String, String> rec : a.entrySet()){
+            String key = rec.getKey();
+            String val = rec.getValue();
+            switch (key) {
+                case "name":
+                    name = val;
+                    break;
+                case "prompt":
+                    prompt=val;
+                    break;
+                case "systemPrompt":
+                    systemPrompt=val;
+                    break;
+                case "output":
+                    output=getSchemaType(val);
+                    break;
+                default:
+                    throw new WorkflowFormatException("hibas adat(ok)");
+            }
+        }
+        SchemaType[] sc = {output};
+        StructuredOutput sot = new StructuredOutput(sc);
+        WorkflowStep w = new WorkflowStep(name, prompt, systemPrompt,sot);
+        return w;
     }
-    */
-
+    private static SchemaType getSchemaType(String name){
+        switch(name){
+            case "INT":
+            return SchemaType.INT;
+        case "STRING":
+            return SchemaType.STRING;
+        case "BOOLEAN":
+            return SchemaType.BOOLEAN;
+        case "LIST_INT":
+            return SchemaType.LIST_INT;
+        case "LIST_STRING":
+            return SchemaType.LIST_STRING;
+        case "MAP_STRING_STRING":
+            return SchemaType.MAP_STRING_STRING;
+        default: 
+            return null;
+        }
+    }
+    
 }
